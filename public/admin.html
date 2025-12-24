@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olmarithi - Admin Area</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/jpeg"jpeg href="hero-bg.">
+    <style>
+        /* Admin-specific styles */
+        #admin-panel form, #manage-products-list, #manage-orders-section {
+            background-color: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        #admin-panel label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ccc;
+        }
+
+        #admin-panel input[type="text"], 
+        #admin-panel input[type="number"], 
+        #admin-panel select, 
+        #admin-panel textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: #f4f4f4;
+            border-radius: 4px;
+        }
+
+        /* Product Management List Styling */
+        .product-management-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #444;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+        .product-info img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+            border: 1px solid #4ade80;
+        }
+        .product-actions button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .edit-btn { background-color: #4ade80; color: #121212; }
+        .delete-btn { background-color: #e54848; color: white; }
+        
+        /* Table Styling */
+        #orders-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        #orders-table th, #orders-table td { border: 1px solid #444; padding: 10px; text-align: left; }
+        #orders-table th { background-color: #333; color: #4ade80; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #1a1a1a; margin: 10% auto; padding: 30px; border: 1px solid #4ade80; width: 80%; max-width: 500px; border-radius: 10px; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container" style="background: transparent; box-shadow: none; margin: 0 auto; width: 100%;">
+            <h1>Olmarithi</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="admin.html" style="color: #4ade80;">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section id="login-section" style="max-width: 400px; margin: 40px auto; padding: 20px; background-color: #252525; border-radius: 8px;">
+                <h3>Admin Login</h3>
+                <form id="admin-login-form">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" name="email" required placeholder="example@gmail.com">
+
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" name="password" required>
+
+                    <button type="submit" id="login-btn" style="width: 100%; margin-top: 20px; background-color: #4ade80; color: #121212;">Log In</button>
+                </form>
+            </section>
+
+            <section id="admin-panel" style="display: none;"> 
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
+                    <div>
+                        <h2>Admin Dashboard</h2>
+                        <p>Welcome, Administrator. <span id="admin-user-id" style="color: #4ade80; font-weight: bold;"></span></p>
+                    </div>
+                    <button id="logout-btn" style="background-color: #e54848; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Log Out</button>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <h3>Add New Product</h3>
+                    <button id="btn-open-category-modal" style="background-color: #3b82f6; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; height: fit-content; align-self: center;">+ Add New Category</button>
+                </div>
+
+                <!-- Add Product Form -->
+                <form id="add-product-form">
+                    <label for="product-category">Category:</label>
+                    <select id="product-category" name="category" required>
+                        <option value="" disabled selected>Select a category...</option>
+                        <option value="featured">Featured (Home Page)</option>
+                    </select>
+
+                    <label for="product-name">Product Name:</label>
+                    <input type="text" id="product-name" name="name" required>
+
+                    <label for="product-description">Description:</label>
+                    <textarea id="product-description" name="description" rows="4" required></textarea>
+
+                    <label for="product-price">Price (KSH):</label>
+                    <input type="number" id="product-price" name="price" min="0" required>
+
+                    <label for="product-image-file">Product Image:</label>
+                    <input type="file" id="product-image-file" name="image_file" accept="image/*" required>
+                    <img id="image-preview" src="" style="max-width: 100px; margin-top: 10px; display: none;">
+
+                    <button type="submit" style="margin-top: 20px; background-color: #4ade80; color: #121212;">Add Product to Store</button>
+                </form>
+
+                <!-- Manage Events -->
+                <h3>Manage Events</h3>
+                <div id="manage-events-section" style="background-color:#252525;padding:20px;border-radius:8px;border:1px solid #444;margin-bottom:30px;">
+                    <form id="add-event-form">
+                        <label for="event-title">Event Title / Short Description:</label>
+                        <input type="text" id="event-title" name="title" required>
+
+                        <label for="event-location">Location:</label>
+                        <input type="text" id="event-location" name="location" required>
+
+                        <label for="event-datetime">Date and Time:</label>
+                        <input type="datetime-local" id="event-datetime" name="dateTime" required>
+
+                        <label for="event-notes">Notes:</label>
+                        <textarea id="event-notes" name="notes" rows="3"></textarea>
+
+                        <label for="event-host">Host:</label>
+                        <input type="text" id="event-host" name="host">
+
+                        <button type="submit" style="margin-top: 12px; background-color:#4ade80; color:#121212;">Publish Event</button>
+                    </form>
+
+                    <div id="admin-events-list" style="margin-top:18px;">
+                        <p style="text-align:center; color:#aaa;">Loading events…</p>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <h3>Manage Products</h3>
+                <div id="manage-products-list">
+                    <p style="text-align: center; color: #aaa;">Loading products...</p>
+                </div>
+
+                <!-- Orders -->
+                <h3>Manage Orders</h3>
+                <div id="manage-orders-section">
+                    <p style="text-align: center; color: #aaa;">Loading orders...</p>
+                </div>
+
+                <h3>Client Feedback</h3>
+                <div id="manage-feedback-section">
+                    <p style="text-align: center; color: #aaa;">Loading feedback...</p>
+                </div>
+
+            </section>
+
+            <!-- CATEGORY MODAL (stays outside admin panel for global access but okay here) -->
+            <div id="add-category-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="close-cat-modal">&times;</span>
+                    <h3>Add New Category</h3>
+                    <form id="add-category-form">
+                        <label>Category Name:</label>
+                        <input type="text" id="new-category-name" required>
+                        <button type="submit" style="margin-top: 20px; background-color: #3b82f6; color: white;">Create Category</button>
+                    </form>
+                </div>
+            </div>
+
+    <footer>
+        <div class="container" style="background: transparent; box-shadow: none;">
+            <p>&copy; 2023 Olmarithi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

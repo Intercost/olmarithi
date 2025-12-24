@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olmarithi </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/jpeg"jpeg href="hero-bg.">
+</head>
+<body data-page-type="index">
+    <header>
+        <div class="container" style="background: transparent; box-shadow: none; margin: 0 auto; width: 100%;">
+            <h1>Olmarithi</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html" style="color: #4ade80;">Home</a></li>
+                    <li><a href="#" id="shop-toggle">Start Shopping</a></li>
+                    <li style="position: relative;">
+                        <a href="events.html">Events</a>
+                        <span id="event-badge" 
+                            style="
+                                display:none;
+                                background:red;
+                                color:white;
+                                font-size:10px;
+                                padding:2px 6px;
+                                border-radius:50%;
+                                position:absolute;
+                                top:-6px;
+                                right:-10px;
+                            ">
+                        </span>
+                    </li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="aboutus.html">About Us</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    
+
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div id="side-menu" class="side-menu">
+        <a href="#" id="close-menu">&times;</a>
+        
+        </div>
+
+    <main>
+        <section class="hero">
+            <h2>Welcome to Olmarithi!</h2>
+            <p>Simplicity is Complex.</p>
+        </section>
+
+        <section class="container" id="product-listing">
+            <h2>Featured Products</h2>
+
+            <!-- This div will be populated by script.js fetching products from Firestore -->
+            <div class="product-grid" id="product-grid-main">
+                <p style="text-align: center; padding: 20px;">Loading products...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container" style="background: transparent; box-shadow: none;">
+            <p>&copy; 2023 Olmarithi. All rights reserved.</p>
+        </div>
+    </footer>
+
+     <div id="feedback-icon" title="Send us your feedback!">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M14 0H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5L7 14.5l2.5-2.5H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM2 11V2h12v9H9.5L7 13.5 4.5 11H2z"/>
+            <path d="M5 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+        </svg>
+    </div>
+
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-btn" id="close-feedback-modal">&times;</span>
+            <h3>Share Your Feedback</h3>
+            <p>Tell us about your experience and how we can improve.</p>
+            <form id="feedback-form">
+                <label for="feedback-name">Your Name (Optional):</label>
+                <input type="text" id="feedback-name">
+                
+                <label for="feedback-email">Your Email (Optional):</label>
+                <input type="email" id="feedback-email">
+                
+                <label for="feedback-message">Feedback Message:</label>
+                <textarea id="feedback-message" rows="5" required></textarea>
+                
+                <button type="submit" class="cta-button" style="margin-top: 15px;">Send Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        
+        async function loadEventBadge() {
+            const badge = document.getElementById('event-badge');
+            if (!badge) return;
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/events`);
+                if (!res.ok) return;
+                const events = await res.json();
+
+                if (events.length > 0) {
+                    badge.style.display = 'inline-block';
+                    badge.textContent = events.length;
+                } else {
+                    badge.style.display = 'none';
+                }
+            } catch (e) {
+                console.error('badge error', e);
+            }
+        }
+
+        loadEventBadge();
+        setInterval(loadEventBadge, 30000);
+    </script>
+    <script>
+        const shopToggle = document.getElementById('shop-toggle');
+        const sideMenu = document.getElementById('side-menu');
+        const closeMenu = document.getElementById('close-menu');
+
+        shopToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            sideMenu.style.width = '250px'; // show menu
+        });
+
+        closeMenu.addEventListener('click', (e) => {
+            e.preventDefault();
+            sideMenu.style.width = '0'; // hide menu
+        });
+
+        // Optional: close menu when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === sideMenu) {
+                sideMenu.style.width = '0';
+            }
+        });
+    </script>
+
+    <script>
+        const menu = document.getElementById("side-menu");
+        const links = Array.from(menu.querySelectorAll("a:not(#close-menu)"));
+
+        // Sort links alphabetically by their text
+        links.sort((a, b) => a.textContent.trim().localeCompare(b.textContent.trim()));
+
+        // Append sorted items back to the menu
+        const closeBtn = document.getElementById("close-menu");
+        links.forEach(link => menu.appendChild(link));
+    </script>
+    
+
+</body>
+</html>

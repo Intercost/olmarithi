@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Olmarithi — Events</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="hero-bg.jpeg">
+  <style>
+    .events-container { max-width: 900px; margin: 40px auto; }
+    .event-card { background:#252525; padding:16px; border-radius:8px; margin-bottom:12px; border:1px solid #444; display:flex; justify-content:space-between; align-items:center; }
+    .event-info h4 { margin:0 0 6px 0; color:#4ade80; }
+    .event-meta { color:#ccc; font-size:0.95em; }
+    .notify-icon { position:fixed; right:18px; bottom:18px; background:#4ade80; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.3); cursor:pointer; z-index:1000; }
+    .notify-count { position:absolute; top:-6px; right:-6px; background:#ef4444; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.85em; }
+    .no-events { text-align:center; color:#aaa; padding:20px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="background: transparent; box-shadow: none;">
+      <h1>Olmarithi</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="events.html" style="color: #4ade80;">Events</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container events-container">
+      <h2>Upcoming Events</h2>
+      <div id="events-list">
+        <p class="no-events">Loading events…</p>
+      </div>
+      <p style="margin-top:18px; color:#aaa; font-size:0.95em;">
+        Come to the events to purchase products physically from our sellers. Times and locations are shown above.
+      </p>
+    </div>
+  </main>
+
+  <!-- notification button (opens event list quickly) -->
+  <div id="events-notify" class="notify-icon" title="Events">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2C9.23858 2 7 4.23858 7 7V10.586L5.293 12.293C4.90237 12.6836 4.90237 13.3164 5.293 13.707C5.68363 14.0976 6.31638 14.0976 6.70701 13.707L8 12.414V17C8 18.6569 9.34315 20 11 20H13C14.6569 20 16 18.6569 16 17V12.414L17.293 13.707C17.6836 14.0976 18.3164 14.0976 18.707 13.707C19.0976 13.3164 19.0976 12.6836 18.707 12.293L17 10.586V7C17 4.23858 14.7614 2 12 2Z" fill="#121212"/>
+    </svg>
+    <div id="events-count" class="notify-count" style="display:none;">0</div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:5000/api';
+    const eventsList = document.getElementById('events-list');
+    const notifyBtn = document.getElementById('events-notify');
+    const eventsCountEl = document.getElementById('events-count');
+
+    let lastEventsSnapshot = [];
+
+    function formatDateTime(iso) {
+      const d = new Date(iso);
+      return d.toLocaleString();
+    }
+
+    async function fetchEventsAndRender(showLoading = true) {
+      try {
+        if (showLoading) eventsList.innerHTML = '<p class="no-events">Loading events…</p>';
+        const res = await fetch(`${API_BASE_URL}/events`);
+        if (!res.ok) throw new Error('Failed to fetch events');
+        const events = await res.json();
+
+        // sort by date ascending
+        events.sort((a,b) => new Date(a.dateTime) - new Date(b.dateTime));
+
+        if (events.length === 0) {
+          eventsList.innerHTML = '<p class="no-events">No upcoming events at the moment.</p>';
+        } else {
+          eventsList.innerHTML = '';
+          events.forEach(ev => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+              <div class="event-info">
+                <h4>${ev.title || 'Seller Visit'}</h4>
+                <div class="event-meta">${ev.location} &nbsp; • &nbsp; ${formatDateTime(ev.dateTime)}</div>
+                ${ev.notes ? `<p style="margin:8px 0 0 0; color:#ccc;">${ev.notes}</p>` : ''}
+              </div>
+              <div style="text-align:right;">
+                <small style="color:#aaa;">Hosted by: ${ev.host || 'Olmarithi'}</small>
+              </div>
+            `;
+            eventsList.appendChild(card);
+          });
+        }
+
+        // Notification logic — compare to last snapshot
+        const ids = events.map(e => e._id).join(',');
+        if (ids !== lastEventsSnapshot.join(',')) {
+          // show badge
+          if (events.length > 0) {
+            eventsCountEl.style.display = 'flex';
+            eventsCountEl.textContent = events.length;
+          } else {
+            eventsCountEl.style.display = 'none';
+          }
+          lastEventsSnapshot = events.map(e => e._id);
+        }
+      } catch (err) {
+        eventsList.innerHTML = `<p class="no-events">Error loading events.</p>`;
+        console.error('Events error', err);
+      }
+    }
+
+    // click opens events page (we are on it) — maybe scroll to list
+    notifyBtn.addEventListener('click', () => {
+      window.scrollTo({ top: document.querySelector('.events-container').offsetTop - 30, behavior: 'smooth' });
+    });
+
+    // Polling every 30 seconds for new events
+    fetchEventsAndRender(true);
+    setInterval(() => fetchEventsAndRender(false), 30000);
+  </script>
+</body>
+</html>

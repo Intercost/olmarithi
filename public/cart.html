@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Olmarithi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container" style="background: transparent; box-shadow: none; margin: 0 auto; width: 100%;">
+            <h1>Olmarithi</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+
+                    <li><a href="cart.html" style="color: #4ade80;">Cart</a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Your Shopping Cart</h2>
+            
+            <div id="cart-items">
+                <!-- Cart items will be dynamically loaded here by JavaScript -->
+                <p>Loading cart...</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <!-- Updated button to call the function defined in script.js -->
+                <button onclick="proceedToCheckout()" style="padding: 15px 30px; font-size: 1.1em;">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container" style="background: transparent; box-shadow: none;">
+            <p>&copy; 2023 Olmarithi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

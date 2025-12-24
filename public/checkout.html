@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Olmarithi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container" style="background: transparent; box-shadow: none; margin: 0 auto; width: 100%;">
+            <h1>Olmarithi</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                
+                    <li><a href="cart.html" id="view-cart-button">Cart</a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Secure Checkout</h2>
+            
+            <section id="checkout-form-section">
+                <form id="checkout-form">
+                    <h3>1. Your Details</h3>
+                    <label for="client-name">Full Name:</label>
+                    <input type="text" id="client-name" name="client_name" placeholder="Your full name" required>
+                    <label for="email">Email Address (For order updates):</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+                    <label for="phone-number">M-Pesa Phone Number (For payment prompt):</label>
+                    <input type="tel" id="phone-number" name="phone_number" pattern="[0-9]{10}" placeholder="07XXXXXXXX" required>
+
+                    <h3>2. Delivery Information</h3>
+                    <label for="location-type">Delivery Location:</label>
+                    <select id="location-type" name="location_type" required>
+                        <option value="">-- Select Location Type --</option>
+                        <option value="nairobi">Within Nairobi (KSH 0 Fee)</option>
+                        <option value="outside">Outside Nairobi (KSH 500 Fee)</option>
+                    </select>
+
+                    <label for="delivery-address">Specific Delivery Address / Landmark:</label>
+                    <textarea id="delivery-address" name="delivery_address" rows="3" placeholder="Street name, Building/Apartment, City" required></textarea>
+
+                    <h3 style="margin-top: 30px;">3. Order Summary</h3>
+                    <div id="order-summary" style="border: 1px solid #4ade80; padding: 15px; border-radius: 8px; margin-bottom: 20px; background-color: #252525;">
+                        <p>Cart Total: <span id="cart-total" style="float: right;">KSH 0.00</span></p>
+                        <p>Delivery Fee: <span id="delivery-fee" style="float: right;">KSH 0.00</span></p>
+                        <hr style="border-color: #444; margin: 10px 0;">
+                        <p style="font-size: 1.4em; font-weight: bold; color: #4ade80;">Grand Total: <span id="grand-total" style="float: right;">KSH 0.00</span></p>
+                    </div>
+
+                    <button type="submit" id="pay-button" style="width: 100%; padding: 15px 0; font-size: 1.2em; background-color: #4ade80; color: #121212;">
+                        Pay via M-Pesa
+                    </button>
+                </form>
+            </section>
+
+            <section id="confirmation-message" style="display: none; text-align: center; padding: 50px; background-color: #252525; border-radius: 12px;">
+                <h2 style="color: #4ade80;">Payment Successful!</h2>
+                <p style="font-size: 1.1em;">Thank you for your order with Olmarithi.</p>
+                <p>You have successfully paid <span id="final-paid-amount" style="font-weight: bold;"></span>.</p>
+                <p>A confirmation and details about your delivery process will be sent to your email (<span id="final-email-address" style="font-weight: bold;"></span>) within the next 24 hours.</p>
+                <p style="margin-top: 20px;"><a href="index.html" style="color: #4ade80; text-decoration: underline;">Continue Shopping</a></p>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container" style="background: transparent; box-shadow: none;">
+            <p>&copy; 2023 Olmarithi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
