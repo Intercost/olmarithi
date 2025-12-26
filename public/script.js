@@ -340,13 +340,11 @@ const fetchAndRenderProducts = async (category = null) => {
 
         // 3. PRODUCT RENDERING (Your original logic, which is correct)
         products.forEach(product => {
+            const fullImageUrl = product.imageUrl.startsWith('http') 
+                ? product.imageUrl 
+                : `https://olmarithi-production.up.railway.app${product.imageUrl}`;
             const productCard = document.createElement('div');
             productCard.classList.add('product-card');
-            productCard.dataset.id = product._id; 
-            productCard.dataset.name = product.name;
-            productCard.dataset.price = product.price;
-            productCard.dataset.image = product.imageUrl;
-
             productCard.innerHTML = `
                 <img src="${product.imageUrl}" alt="${product.name}">
                 <h3>${product.name}</h3>
