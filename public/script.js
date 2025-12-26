@@ -1,7 +1,7 @@
 // --- Global Configuration and Utilities ---
 
 // The base URL for your backend API (Ensure your server is running on this port)
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 // Delivery Fee Constants
 const OUTSIDE_NAIROBI_DELIVERY_FEE = 500;
 
