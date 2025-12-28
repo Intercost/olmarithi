@@ -1271,6 +1271,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         renderCart(); // Initial rendering
     }
+
+    const menuToggle = document.getElementById('menu-toggle');
+    const mainNav = document.querySelector('#main-nav ul');
+
+    menuToggle.addEventListener('click', () => {
+        // This adds/removes the 'active' class when clicked
+        mainNav.classList.toggle('active');
+        
+        // Optional: Change icon from ☰ to X
+        if (mainNav.classList.contains('active')) {
+            menuToggle.innerHTML = '✖ Close';
+        } else {
+            menuToggle.innerHTML = '☰ Menu';
+        }
+    });
     
     // --- Checkout Page Logic ---
     const checkoutForm = document.getElementById('checkout-form');
