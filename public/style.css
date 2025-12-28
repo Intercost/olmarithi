@@ -418,3 +418,78 @@ footer {
 .delete-feedback-btn:hover {
     background-color: #dc2626;
 }
+
+/* --- MOBILE RESPONSIVE STYLES --- */
+@media screen and (max-width: 768px) {
+    
+    /* 1. Adjust the Main Container */
+    .container {
+        width: 95%; /* Use more screen width on small devices */
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    /* 2. Hero Section Adjustments */
+    .hero {
+        min-height: 300px;
+        padding: 1.5em;
+    }
+
+    .hero h2 {
+        font-size: 2em; /* Shrink title so it doesn't wrap awkwardly */
+    }
+
+    .hero p {
+        font-size: 1.1em;
+    }
+
+    /* 3. Navigation - Stack vertically or hide */
+    nav ul {
+        flex-direction: column; /* Stack menu items */
+        align-items: center;
+    }
+
+    nav ul li {
+        width: 100%;
+        text-align: center;
+    }
+
+    nav ul li a {
+        padding: 0.8em;
+        border-bottom: 1px solid #2d2d2d;
+    }
+
+    /* 4. Product Grid - Force 1 column if it gets too tight */
+    .product-grid {
+        grid-template-columns: 1fr; /* Single column on small phones */
+        gap: 15px;
+    }
+
+    /* 5. Admin Tables - Make them scrollable */
+    .admin-table {
+        display: block;
+        overflow-x: auto; /* Allows horizontal swipe on tables without breaking layout */
+        white-space: nowrap;
+    }
+
+    /* 6. Cart Items - Stack details */
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cart-item img {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .cart-details {
+        margin-bottom: 10px;
+    }
+
+    /* 7. Modals - Make them wider on mobile */
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+    }
+}
